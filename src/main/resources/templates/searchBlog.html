@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Search Results</title>
+</head>
+<body>
+	<h1>Search Results</h1>
+	<ul>
+		<li th:each="post : ${searchBlogs}">
+			<h2 th:text="${post.title}"></h2>
+
+			<p>
+				Content:<span th:text="${post.content}"></span>
+			</p>
+			<p>Author:
+			<div th:if="${post.author != null}">
+				<span th:text="${post.author.name}"></span>
+			</div>
+			</p>
+
+			<p>
+				Tags: <span th:if="${post.tags !=null}"> <span
+					th:each="tag : ${post.tags}"> <span th:text="${tag.name}"></span>
+						<span th:if="${post.tags.get(post.tags.size()-1)!=tag}">,</span>
+				</span>
+				</span> <span th:if="${post.tags.size() == 0}">No tags</span>
+			</p>
+		</li>
+	</ul>
+</body>
+</html>

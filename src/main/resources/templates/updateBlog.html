@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .form-button {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Update Your Blog</h2>
+        <form th:action="@{/update}" method="post">
+        	<input type="hidden" name="id" th:value="${post.id}" />
+        	
+            <div class="form-group">
+                <label for="title" class="form-label">Title:</label>
+                <input type="text" id="title" name="title" class="form-input" th:value="${post.title}">
+            </div>
+            <div class="form-group">
+                <label for="excerpt" class="form-label">Excerpt:</label>
+                <textarea id="excerpt" name="excerpt" class="form-textarea" rows="4" th:text="${post.excerpt}"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="content" class="form-label">Content:</label>
+                <textarea id="content" name="content" class="form-textarea" rows="8" th:text="${post.content}"></textarea>
+            </div>
+            <button type="submit" class="form-button">Save Change</button>
+        </form>
+         <a href="/">Back to home</a>
+    </div>
+</body>
+</html>
