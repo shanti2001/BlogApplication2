@@ -28,34 +28,34 @@
 	</div>
 	<div th:if="${#lists.size(posts) > 0}">
 		<div class="container">
-			<table border="1">
-				<tr>
-					<td>Title</td>
-					<td>Excerpt</td>
-					<td>Author</td>
-					<td>Published Date</td>
-					<td>Tags</td>
-					<td>Show Post</td>
-				</tr>
-				<tr th:each="post : ${posts}">
-					<td th:text="${post.title}"></td>
-					<td th:text="${post.excerpt}"></td>
-					<td>
-						<div th:if="${post.author != null}">
-							<span th:text="${post.author.name}"></span>
-						</div>
-					</td>
-					<td th:text="${#dates.format(post.published_at, 'yyyy-MM-dd')}"></td>
-					<td><span th:if="${post.tags !=null}"> <span
+			<div th:each="post : ${posts}">
+				<div class="post">
+					<h3 th:text="${post.title}"></h3>
+					<div>
+						<strong>Excerpt:</strong><span th:text="${post.excerpt}"></span>
+					</div>
+					<div th:if="${post.author != null}">
+						<p>
+							<strong>Author:</strong> <span th:text="${post.author.name}"></span>
+						</p>
+					</div>
+					<p>
+						<strong>Published Date:</strong> <span
+							th:text="${#dates.format(post.published_at, 'yyyy-MM-dd')}"></span>
+					</p>
+					<div>
+						<strong>Tags:</strong> <span th:if="${post.tags !=null}"> <span
 							th:each="tag : ${post.tags}"> <span th:text="${tag.name}"></span>
 								<span th:if="${post.tags.get(post.tags.size()-1)!=tag}">,</span>
 						</span>
-					</span> <span th:if="${post.tags.size() == 0}">No tags</span></td>
-					<td><a th:href="@{'/blogpost/' + ${post.id}}"
-						class="read-button">Read More</a></td>
-				</tr>
-			</table>
+						</span> <span th:if="${post.tags.size() == 0}">No tags</span>
+					</div>
+					<a th:href="@{'/blogpost/' + ${post.id}}" class="read-button">Read
+						More</a>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>
 </html>
+

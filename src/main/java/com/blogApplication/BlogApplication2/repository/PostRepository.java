@@ -10,7 +10,6 @@ public interface PostRepository extends JpaRepository<Post, Integer>{
 
     List<Post> findByTitleContaining(String searchText);
     List<Post> findByContentContaining(String searchText);
-//    List<Posts> findByAuthorContaining(String searchText);
-
+    
 
 }

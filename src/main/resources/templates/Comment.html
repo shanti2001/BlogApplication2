@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Post Comments</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+}
+
+.comment-list {
+	max-width: 600px;
+	margin: 0 auto;
+	list-style-type: none;
+	padding: 0;
+}
+
+.comment {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
+.comment .user {
+	font-weight: bold;
+}
+
+.comment .timestamp {
+	color: #777;
+}
+
+.red-button {
+	color: red;
+}
+
+.blue-button {
+	color: blue;
+}
+</style>
+</head>
+<body>
+	<h1 th:text=${title}></h1>
+	<ul class="comment-list">
+		<li th:each="comment : ${comments}" class="comment">
+			<p class="user" th:text="${comment.name}"></p>
+			<p class="timestamp" th:text="${comment.updated_at}"></p>
+			<p th:text="${comment.comment}"></p> 
+			<a th:href="@{/updatecomment/{id}(id=${comment.id})}" class="blue-button">Update</a>
+			<a th:href="@{/deletecomment/{id}(id=${comment.id})}" class="red-button">Delete</a>
+		</li>
+	</ul>
+</body>
+</html>

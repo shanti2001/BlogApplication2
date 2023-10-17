@@ -147,9 +147,7 @@ public class PostController {
 					postTags.add(tagn);
 					tagsRepository.save(tagn);
 				}
-
 			}
-
 		}
 		post.setTags(postTags);
 		postsRepository.save(post);
