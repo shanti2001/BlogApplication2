@@ -45,8 +45,8 @@ body {
 			<p class="user" th:text="${comment.name}"></p>
 			<p class="timestamp" th:text="${comment.updated_at}"></p>
 			<p th:text="${comment.comment}"></p> 
-			<a th:href="@{/updatecomment/{id}(id=${comment.id})}" class="blue-button">Update</a>
-			<a th:href="@{/deletecomment/{id}(id=${comment.id})}" class="red-button">Delete</a>
+			<a th:href="@{/updatecomment/{id}(id=${comment.id})}" >Update</a>
+			<a th:href="@{/deletecomment/{id}(id=${comment.id})}" >Delete</a>
 		</li>
 	</ul>
 </body>

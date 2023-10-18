@@ -8,18 +8,20 @@
 	<div class="menu-bar">
 		<a href="/">Home</a>
 		<div class="menu-bar-right">
-
 			<form th:action="@{/search}" method="get">
 				<input type="text" name="q" placeholder="Search blog posts" />
-				<button type="submit">Search</button>
+				<!-- <button type="submit">Search</button> -->
 			</form>
-			<form th:action="@{/sortbypublisheddate}" method="get">
-				<input type="text" name="q" placeholder="Type newest or oldest" />
-				<button type="submit">Sort blog posts using the published
-					DateTime</button>
+			<form th:action="@{/sortby}" method="get">
+			    <select id="sort" name="sort" class="sortButton">
+			        <option value="asc">Oldest</option>
+			        <option value="desc">Newest</option>
+			        
+			    </select> 
+			    <input type="submit" value="SortByPublishDate"> 
 			</form>
-			<a href="/post" class="green-button">Create New Blog</a> <a
-				href="/userblog" class="blue-button">your Blog</a>
+			<a th:href="@{/newpost}" >Create New Blog</a>
+			<a th:href="@{/userblog}">Your Post</a>
 		</div>
 	</div>
 
@@ -30,31 +32,35 @@
 		<div class="container">
 			<div th:each="post : ${posts}">
 				<div class="post">
-					<h3 th:text="${post.title}"></h3>
-					<div>
-						<strong>Excerpt:</strong><span th:text="${post.excerpt}"></span>
-					</div>
+					<h2 th:text="${post.title}"></h2>
 					<div th:if="${post.author != null}">
 						<p>
-							<strong>Author:</strong> <span th:text="${post.author.name}"></span>
+							<span th:text="${post.author.name}"></span>
+							<span th:text="${#dates.format(post.published_at, 'dd/MM/yyyy')}"></span>
 						</p>
 					</div>
 					<p>
-						<strong>Published Date:</strong> <span
-							th:text="${#dates.format(post.published_at, 'yyyy-MM-dd')}"></span>
+						<span th:text="${post.excerpt}"></span>
 					</p>
+					
 					<div>
 						<strong>Tags:</strong> <span th:if="${post.tags !=null}"> <span
 							th:each="tag : ${post.tags}"> <span th:text="${tag.name}"></span>
 								<span th:if="${post.tags.get(post.tags.size()-1)!=tag}">,</span>
 						</span>
 						</span> <span th:if="${post.tags.size() == 0}">No tags</span>
-					</div>
+					</div><br>
 					<a th:href="@{'/blogpost/' + ${post.id}}" class="read-button">Read
 						More</a>
 				</div>
 			</div>
 		</div>
+	</div>
+	<div>
+		<nav th:if="${pageCount} != null">
+			<a class="prev" th:href="@{~/userpage(start=${start}-1,limit=${limit})}" th:unless="${start == 1}"> < Previous</a>
+			<a class="next" th:href="@{~/userpage(start=${start}+1,limit=${limit})}" th:unless="${start == pageCount}">Next > </a>
+		</nav>
 	</div>
 </body>
 </html>

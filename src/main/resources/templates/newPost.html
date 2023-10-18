@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Create Blog</title>
+<link rel="stylesheet" th:href="@{/style/homeStyle.css}" />
 <style>
 body {
 	font-family: Arial, sans-serif;
@@ -11,7 +12,7 @@ body {
 }
 
 .form-container {
-	max-width: 600px;
+	max-width: auto;
 	margin: 20px auto;
 	padding: 20px;
 	background-color: #fff;
@@ -56,30 +57,45 @@ body {
 </style>
 </head>
 <body>
+	<div class="menu-bar">
+		<a href="/">Home</a>
+		<div class="menu-bar-right">
+			
+			<form th:action="@{/search}" method="get">
+				<input type="text" name="q" placeholder="Search blog posts" />
+				<!-- <button type="submit">Search</button> -->
+			</form>
+			<form th:action="@{/sortby}" method="get">
+			    <select id="sort" name="sort" class="sortButton">
+			        <option value="publishedAt">PublishDate</option>
+			        <option value="tag">Tag</option>
+			        
+			    </select>
+			    <input type="submit" value="Sort">
+			</form>
+			<a href="/newpost" class="green-button">Create New Blog</a>
+
+		</div>
+	</div>
 	<div class="form-container">
-		<h2>Write New Blog</h2>
-		<form th:action="@{/post}" method="post">
+		<h2 align="center">Write New Post</h2>
+		<form th:action="@{/publishpost}" method="post">
 			<div class="form-group">
-				<label for="title" class="form-label">Title:</label> <input
-					type="text" id="title" name="title" class="form-input" required>
+				<input type="text" id="title" name="title" class="form-input" placeholder="Title" required>
 			</div>
 			<div class="form-group">
-				<label for="excerpt" class="form-label">Excerpt:</label>
-				<textarea id="excerpt" name="excerpt" class="form-textarea" rows="4"
-					required></textarea>
+				<textarea id="excerpt" name="excerpt" class="form-textarea" rows="4" placeholder="Excerpt" required></textarea>
 			</div>
 			<div class="form-group">
-				<label for="content" class="form-label">Content:</label>
-				<textarea id="content" name="content" class="form-textarea" rows="8"
-					required></textarea>
+				<textarea id="content" name="content" class="form-textarea" rows="10" placeholder="Content" required></textarea>
 			</div>
 			<div class="form-group">
-				<label for="tags" class="form-label">Tags:</label> <input
-					type="text" name="tagInput" class="tag-input" id="tag-input"
-					placeholder="Add Tags (comma-separated)">
+				<input type="text" name="tagInput" class="form-input" id="tag-input" placeholder="Add Tags (comma-separated)">
 
 			</div>
-			<button type="submit" class="form-button">Publish</button>
+			<div align="center">
+				<button type="submit" class="form-button">Publish</button>
+			</div>
 		</form>
 	</div>
 </body>

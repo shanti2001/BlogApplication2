@@ -6,16 +6,16 @@
 </head>
 <body>
 <div class="container">
-    <h1>Login Page</h1>
+    <h1>Login </h1>
     <div class="form-container">
         <form th:action="@{/userpage}" method="post">
             <input type="email" placeholder="Email" name="email" required="required"><br>
             <input type="password" placeholder="Password" name="password" required="required"><br>
             <br>
-            <button class="button" type="submit">Login</button>
+            <button class="button" type="submit">Submit</button>
         </form>
         <p>
-            Don't have an account? <a th:href="@{/register}">Register</a>
+            Don't have an account? <a th:href="@{/register}" >Create one</a>
         </p>
     </div>
 </div>

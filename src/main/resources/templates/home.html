@@ -3,32 +3,30 @@
 <head>
 <title>Home Page</title>
 <link rel="stylesheet" th:href="@{/style/homeStyle.css}" />
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-	crossorigin="anonymous">
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-	integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-	crossorigin="anonymous"></script>
 </head>
 <body>
 	<div class="menu-bar">
 		<a href="/">Home</a>
 		<div class="menu-bar-right">
-			<a href="/register">Register</a> <a href="/login">Login</a>
+			<a href="/login">Login</a>
 			<form th:action="@{/search}" method="get">
 				<input type="text" name="q" placeholder="Search blog posts" />
-				<button type="submit">Search</button>
+				<!-- <button type="submit">Search</button> -->
 			</form>
-			<form th:action="@{/sortbypublisheddate}" method="get">
+			<!-- <form th:action="@{/sortby}" method="get">
 				<input type="text" name="q" placeholder="Type newest or oldest" />
 				<button type="submit">Sort blog posts using the published
 					DateTime</button>
+			</form> -->
+			<form th:action="@{/sortby}" method="get">
+			    <select id="sort" name="sort" class="sortButton">
+			        <option value="asc">Oldest</option>
+			        <option value="desc">Newest</option>
+			        
+			    </select> 
+			    <input type="submit" value="SortByPublishDate"> 
 			</form>
-			<a href="/post" class="green-button">Create New Blog</a>
-
+			<a th:href="@{/newpost}" >Create New Blog</a>
 		</div>
 	</div>
 
@@ -40,48 +38,35 @@
 		<div class="container">
 			<div th:each="post : ${posts}">
 				<div class="post">
-					<h3 th:text="${post.title}"></h3>
-					<div>
-						<strong>Excerpt:</strong><span th:text="${post.excerpt}"></span>
-					</div>
+					<h2 th:text="${post.title}"></h2>
 					<div th:if="${post.author != null}">
 						<p>
-							<strong>Author:</strong> <span th:text="${post.author.name}"></span>
+							<span th:text="${post.author.name}"></span>
+							<span th:text="${#dates.format(post.published_at, 'dd/MM/yyyy')}"></span>
 						</p>
 					</div>
 					<p>
-						<strong>Published Date:</strong> <span
-							th:text="${#dates.format(post.published_at, 'yyyy-MM-dd')}"></span>
+						<span th:text="${post.excerpt}"></span>
 					</p>
+					
 					<div>
 						<strong>Tags:</strong> <span th:if="${post.tags !=null}"> <span
 							th:each="tag : ${post.tags}"> <span th:text="${tag.name}"></span>
 								<span th:if="${post.tags.get(post.tags.size()-1)!=tag}">,</span>
 						</span>
 						</span> <span th:if="${post.tags.size() == 0}">No tags</span>
-					</div>
+					</div><br>
 					<a th:href="@{'/blogpost/' + ${post.id}}" class="read-button">Read
 						More</a>
 				</div>
 			</div>
 		</div>
 	</div>
-	<nav th:if="${pageCount} != null" aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            <li th:class="${pageNumber}==1?'page-item disabled':'page-item'">
-                <a class="page-link" th:href="@{~/(start=${pageNumber}-1,limit=${pageSize})}">Previous</a>
-            </li>
-			
-            <tr th:each="i :${#numbers.sequence( 1, pageCount, 1)}">
-                <li th:class="${pageNumber==i}?'page-item active':'page-item'">
-                    <a class="page-link" th:href="@{~/(start=${i},limit=${pageSize})}" ><span th:text="${i}" /></a>
-                </li>
-            </tr>
-
-            <li th:class="${pageNumber}==${pageCount}?'page-item disabled':'page-item'">
-                <a class="page-link" th:href="@{~/(start=${pageNumber}+1,limit=${pageSize})}">Next</a>
-            </li>
-        </ul>
-    </nav>
+	<div>
+		<nav th:if="${pageCount} != null">
+			<a class="prev" th:href="@{~/(start=${start}-1,limit=${limit})}" th:unless="${start == 1}"> < Previous</a>
+			<a class="next" th:href="@{~/(start=${start}+1,limit=${limit})}" th:unless="${start == pageCount}">Next > </a>
+		</nav>
+	</div>
 </body>
 </html>

@@ -14,4 +14,12 @@ public class UserService {
 	public User findByEmail(String email) {
 		return userRepository.findByEmailContaining(email);
 	}
+	
+	public void addUser(String name,String email,String password,String confirmPassword) {
+		User newUser = new User();
+		newUser.setName(name);
+		newUser.setEmail(email);
+		newUser.setPassword(password);
+		userRepository.save(newUser);
+	}
 }

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Create Blog</title>
+    <title>Update Blog</title>
+    <link rel="stylesheet" th:href="@{/style/homeStyle.css}" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,7 +12,7 @@
         }
 
         .form-container {
-            max-width: 600px;
+            max-width: auto;
             margin: 20px auto;
             padding: 20px;
             background-color: #fff;
@@ -45,19 +46,41 @@
             border-radius: 3px;
         }
 
-        .form-button {
-            background-color: #007BFF;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
+        .button {
+			background-color: white;
+			padding: 10px 25px;
+			font-size: 13px;
+			cursor: pointer;
+		}
+		
+		.button:hover {
+			background-color: #ccc;
+		}
     </style>
 </head>
 <body>
+	<div class="menu-bar">
+		<a href="/">Home</a>
+		<div class="menu-bar-right">
+			<a href="/login">Login</a>
+			<form th:action="@{/search}" method="get">
+				<input type="text" name="q" placeholder="Search blog posts" />
+				<!-- <button type="submit">Search</button> -->
+			</form>
+			<form th:action="@{/sortby}" method="get">
+			    <select id="sort" name="sort" class="sortButton">
+			        <option value="asc">Oldest</option>
+			        <option value="desc">Newest</option>
+			        
+			    </select> 
+			    <input type="submit" value="SortByPublishDate"> 
+			</form>
+			<a th:href="@{/newpost}" >Create New Blog</a>
+
+		</div>
+	</div>
     <div class="form-container">
-        <h2>Update Your Blog</h2>
+        <h2>Update Post</h2>
         <form th:action="@{/update}" method="post">
         	<input type="hidden" name="id" th:value="${post.id}" />
         	
@@ -73,8 +96,14 @@
                 <label for="content" class="form-label">Content:</label>
                 <textarea id="content" name="content" class="form-textarea" rows="8" th:text="${post.content}"></textarea>
             </div>
-            <button type="submit" class="form-button">Save Change</button>
+            <div class="form-group">
+            	<label for="tagInput" class="form-label">Tags:</label>
+				<input type="text" name="tagInput" class="form-input" id="tag-input" th:value="${alltags}">
+
+			</div >
+            <button type="submit" class="button" >Save Change</button>
         </form>
+        <br>
          <a href="/">Back to home</a>
     </div>
 </body>

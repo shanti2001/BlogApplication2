@@ -40,23 +40,31 @@ public class PostController {
 	@Autowired
 	TagService tagService;
 
+	@PostMapping("/publishpost")
+	public String addPost(@RequestParam("tagInput") String allTag, @ModelAttribute Post post) {
+		postService.addPost(allTag, post);
+		return "redirect:/userpage";
+	}
 	@GetMapping("/update/{id}")
 	public String updatePostForm(@PathVariable int id, Model model) {
 		Post post = postsRepository.findById(id).orElse(null);
+		List<Tag> tags = post.getTags();
+		String allTags = "";
+		for(int i=0;i<tags.size();i++) {
+			if(i==tags.size()-1) {
+				allTags+=tags.get(i).getName();
+			}
+			else {
+				allTags+=tags.get(i).getName()+",";
+			}
+		}
 		model.addAttribute("post",post);
+		model.addAttribute("alltags",allTags);
 		return "updateBlog";
 	}
 	@PostMapping("/update")
-	public String updateForm(@ModelAttribute("post") Post post) {
-		int postId = post.getId();
-		Post exitPost = postsRepository.findById(postId).orElse(null);
-		if(exitPost != null) {
-			exitPost.setContent(post.getContent());
-			exitPost.setExcerpt(post.getExcerpt());
-			exitPost.setTitle(post.getTitle());
-			exitPost.setUpdated_at(new Date());
-		}
-		postsRepository.save(exitPost);
+	public String updateForm(@RequestParam("tagInput") String allTag, @ModelAttribute Post post) {
+		postService.updatePost(allTag,post);
 		return "redirect:/userpage"; 
 	}
 
@@ -66,91 +74,4 @@ public class PostController {
 		return "redirect:/userblog";
 	}
 
-	@PostMapping("/post")
-	public String submit(@RequestParam("tagInput") String tagInput, @ModelAttribute Post post) {
-
-		if(post.getPublished_at()==null) {
-			post.setPublished_at(new Date());
-		}
-		User author = new User();
-		author.setEmail("shanti2001samanta@gmail.com");
-		author.setPassword("1234");
-		author.setName("shanti");
-
-		post.setAuthor(author);
-
-		post.setCreated_at(new Date());
-		post.setUpdated_at(new Date());
-		post.setIs_published(true);
-
-		List<Post> posts = author.getPosts();
-		if(posts==null) {
-			posts = new ArrayList<>();
-		}
-		posts.add(post);
-		author.setPosts(posts);
-
-		userRepository.save(author);
-		postsRepository.save(post);
-
-		String[] tagsName = tagInput.split(",");
-		List<Tag> tags = tagsRepository.findAll();
-		List<Tag> postTags = new ArrayList();
-		if(tags.size() == 0) {
-			for(String tagName:tagsName) {
-				Tag newTag = new Tag();
-				newTag.setCreated_At(new Date());
-				newTag.setName(tagName);
-				newTag.setUpdated_at(new Date());
-				tagsRepository.save(newTag);
-				Tag tag = tagService.findByName(tagName);
-				List<Post> tagposts = tag.getPosts();
-				if(tagposts==null) {
-					tagposts = new ArrayList<>();
-				}
-				tagposts.add(post);
-				postTags.add(tag);
-				tagsRepository.save(tag);
-			}
-		}
-		else {
-
-			for(String tagName:tagsName) {
-				for(Tag tag:tags) {
-					if(tag.getName().equals(tagName)) {
-						Tag myTag = tagsRepository.findById(tag.getId()).get();
-						myTag.setUpdated_at(new Date());
-						tagsRepository.save(myTag);
-						Tag tagn = tagsRepository.findById(tag.getId()).get();
-						List<Post> tagposts = tagn.getPosts();
-						if(tagposts==null) {
-							tagposts = new ArrayList<>();
-						}
-						tagposts.add(post);
-						postTags.add(tagn);
-						tagsRepository.save(tagn);
-					}
-
-				}
-				if(tagService.findByName(tagName)==null) {
-					Tag newTag = new Tag();
-					newTag.setCreated_At(new Date());
-					newTag.setName(tagName);
-					newTag.setUpdated_at(new Date());
-					tagsRepository.save(newTag);
-					Tag tagn = tagService.findByName(tagName);
-					List<Post> tagposts = tagn.getPosts();
-					if(tagposts==null) {
-						tagposts = new ArrayList<>();
-					}
-					tagposts.add(post);
-					postTags.add(tagn);
-					tagsRepository.save(tagn);
-				}
-			}
-		}
-		post.setTags(postTags);
-		postsRepository.save(post);
-		return "redirect:/userpage";
-	}
 }

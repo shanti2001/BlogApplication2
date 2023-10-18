@@ -18,8 +18,9 @@ body {
 	padding: 14px 16px;
 	text-decoration: none;
 }
-.menu-bar-right{
-	float:right;
+
+.menu-bar-right {
+	float: right;
 }
 
 .menu-bar a:hover {
@@ -28,26 +29,56 @@ body {
 }
 
 .container {
-	text-align: center;
-	padding: 100px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-column-gap: 10px;
+	grid-row-gap: 10px;
+	grid-auto-rows: minmax(100px, auto);
+	padding: 15px;
 }
-.red-button{
-	
-	color: red;
+.postContainer{
+	padding: 10px;
 }
-
-.blue-button{
-	
-	color: blue;
-}
-
-.green-button{
-	background-color:green;
-	color: white;
+.post{
+	border: 1px solid;
+	padding: 10px;
 }
 
+a {
+	text-decoration: none;
+}
 
+.prev, .next {
+	padding: 10px 20px;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	position: absolute;
+}
 
+.prev {
+	left: 15px;
+}
 
+.next {
+	right: 15px;
+}
+
+.button {
+	background-color: white;
+	padding: 10px 25px;
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.button:hover {
+	background-color: #ccc;
+}
+.sortButton{
+	background-color: white;
+	padding: 7px 25px;
+	font-size: 13px;
+	cursor: pointer;
+}
 
 
