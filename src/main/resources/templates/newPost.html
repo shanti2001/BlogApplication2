@@ -3,76 +3,27 @@
 <head>
 <title>Create Blog</title>
 <link rel="stylesheet" th:href="@{/style/homeStyle.css}" />
-<style>
-body {
-	font-family: Arial, sans-serif;
-	background-color: #f0f0f0;
-	margin: 0;
-	padding: 0;
-}
+<link rel="stylesheet" th:href="@{/style/newPost.css}" />
 
-.form-container {
-	max-width: auto;
-	margin: 20px auto;
-	padding: 20px;
-	background-color: #fff;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-}
-
-.form-group {
-	margin-bottom: 15px;
-}
-
-.form-label {
-	font-weight: bold;
-}
-
-.form-input {
-	width: 100%;
-	padding: 10px;
-	margin-top: 5px;
-	margin-bottom: 10px;
-	border: 1px solid #ccc;
-	border-radius: 3px;
-}
-
-.form-textarea {
-	width: 100%;
-	padding: 10px;
-	margin-top: 5px;
-	margin-bottom: 10px;
-	border: 1px solid #ccc;
-	border-radius: 3px;
-}
-
-.form-button {
-	background-color: #007BFF;
-	color: #fff;
-	padding: 10px 20px;
-	border: none;
-	border-radius: 3px;
-	cursor: pointer;
-}
-</style>
 </head>
 <body>
 	<div class="menu-bar">
 		<a href="/">Home</a>
 		<div class="menu-bar-right">
-			
+			<a href="/login">Login</a>
 			<form th:action="@{/search}" method="get">
 				<input type="text" name="q" placeholder="Search blog posts" />
 				<!-- <button type="submit">Search</button> -->
 			</form>
 			<form th:action="@{/sortby}" method="get">
 			    <select id="sort" name="sort" class="sortButton">
-			        <option value="publishedAt">PublishDate</option>
-			        <option value="tag">Tag</option>
+			        <option value="asc">Oldest</option>
+			        <option value="desc">Newest</option>
 			        
-			    </select>
-			    <input type="submit" value="Sort">
+			    </select> 
+			    <input type="submit" value="SortByPublishDate"> 
 			</form>
+			<a th:href="@{/filter}">Filter</a>
 			<a href="/newpost" class="green-button">Create New Blog</a>
 
 		</div>

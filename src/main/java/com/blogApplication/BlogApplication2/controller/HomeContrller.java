@@ -3,6 +3,7 @@ package com.blogApplication.BlogApplication2.controller;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.blogApplication.BlogApplication2.entity.Post;
+import com.blogApplication.BlogApplication2.entity.Tag;
 import com.blogApplication.BlogApplication2.entity.User;
 import com.blogApplication.BlogApplication2.repository.PostRepository;
+import com.blogApplication.BlogApplication2.repository.TagRepository;
 import com.blogApplication.BlogApplication2.repository.UserRepository;
 import com.blogApplication.BlogApplication2.service.PostService;
 import com.blogApplication.BlogApplication2.service.UserService;
@@ -36,6 +39,8 @@ public class HomeContrller {
 	PostService postService;
 	@Autowired
 	UserService userService;
+	@Autowired
+	TagRepository tagRepository;
 
 	@RequestMapping("/")
 	public String home(@RequestParam(name = "start", required = false, defaultValue = "1") int start,
@@ -49,30 +54,7 @@ public class HomeContrller {
 		model.addAttribute("posts",posts);
 		return "home";
 	}
-	@RequestMapping(value = "/login")
-	public String login() {
-		return "login";
-	}
-	@RequestMapping(value = "/register")
-	public String register() {
-		return "register";
-	}
-	@PostMapping("/register")
-	public String addUser(@RequestParam(name = "name") String name,
-			@RequestParam(name = "email") String email,
-			@RequestParam(name = "password") String password,
-			@RequestParam(name = "confirmPassword") String confirmPassword) {
-		
-		if(password.equals(confirmPassword)) {
-			userService.addUser(name, email, password, password);
-			return "redirect:/login";
-		}
-		else {
-			return "register";
-		}
-		
-	}
-
+	
 	@RequestMapping("/newpost")
 	public String newPost() {
 		return "newPost";
@@ -110,6 +92,23 @@ public class HomeContrller {
 	public String getAllPostsSortedByPublishedDate(@RequestParam(name = "sort", required = false) String sortBy, Model model) {
 		List<Post> posts = postService.getAllPostsSortedByPublishDate(sortBy);
 		model.addAttribute("posts", posts);
+		return "home";
+	}
+	@RequestMapping("/filter")
+	public String filter(Model model) {
+		List<User> users = userRepository.findAll();
+		List<Tag> tags = tagRepository.findAll();
+		model.addAttribute("users",users);
+		model.addAttribute("tags",tags);
+		return "selectFilter";
+	}
+	@RequestMapping("/filterby")
+	public String filterBy(@RequestParam(name = "authorName", required = false) String[] authorsName,
+			@RequestParam(name = "tagId", required = false) String[] tagsId ,Model model) {
+		
+		Set<Post> posts = postService.filterByAuthorAndTags(authorsName,tagsId);
+
+		model.addAttribute("posts",posts);
 		return "home";
 	}
 }

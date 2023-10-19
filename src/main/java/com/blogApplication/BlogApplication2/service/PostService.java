@@ -27,20 +27,8 @@ public class PostService {
 	public Set<Post> findPostsByTitleOrContentOrAuthorOrTag(String searchText) {
 		String [] searchAll = searchText.split(" ");
 		Set<Post> results = new HashSet<>();
-		results.addAll(postsRepository.findByTitleContaining(searchText));
-		results.addAll(postsRepository.findByContentContaining(searchText));
 		List<User> users = userRepository.findAll();
-		for(User user:users) {
-			if(user.getName().equals(searchText)) {
-				results.addAll(user.getPosts());
-			}
-		}
 		List<Tag> tags = tagRepository.findAll();
-		for(Tag tag:tags) {
-			if(tag.getName().equals(searchText)) {
-				results.addAll(tag.getPosts());
-			}
-		}
 		for(String searchOne:searchAll) {
 			results.addAll(postsRepository.findByTitleContaining(searchOne));
 			results.addAll(postsRepository.findByContentContaining(searchOne));
@@ -91,7 +79,14 @@ public class PostService {
 		Post exitPost = postsRepository.findById(postId).orElse(null);
 		if(exitPost != null) {
 			String[] tagsName = allTag.split(",");
+			for(String s:tagsName) {
+				System.out.print(s+" ");
+			}
 			List<Tag> postTags = exitPost.getTags();
+			if(postTags.size()==0) {
+				postTags = new ArrayList();
+			}
+			//			System.out.print(postTags.get(0).getName());
 			List<Tag> tags = tagRepository.findAll();
 			if(tags.size() == 0) {
 				for(String tagName:tagsName) {
@@ -112,6 +107,22 @@ public class PostService {
 			}
 			else {
 				for(String tagName:tagsName) {
+					for(Tag tag:tags) {
+						if(tag.getName().equals(tagName.trim())) {
+							Tag myTag = tagRepository.findById(tag.getId()).get();
+							myTag.setUpdated_at(new Date());
+							tagRepository.save(myTag);
+							Tag tagn = tagRepository.findById(tag.getId()).get();
+							List<Post> tagposts = tagn.getPosts();
+							if(tagposts==null) {
+								tagposts = new ArrayList<>();
+							}
+							tagposts.add(post);
+							postTags.add(tagn);
+							tagRepository.save(tagn);
+						}
+
+					}
 					if(tagService.findByName(tagName.trim())==null) {
 						Tag newTag = new Tag();
 						newTag.setCreated_At(new Date());
@@ -129,15 +140,16 @@ public class PostService {
 					}
 				}
 			}
-			post.setTags(postTags);
+			exitPost.setTags(postTags);
 			exitPost.setContent(post.getContent());
 			exitPost.setExcerpt(post.getExcerpt());
 			exitPost.setTitle(post.getTitle());
 			exitPost.setUpdated_at(new Date());
+			postsRepository.save(exitPost);
 
 		}
 
-		postsRepository.save(exitPost);
+
 	}
 
 	public void addPost(String allTag,Post post) {
@@ -227,5 +239,56 @@ public class PostService {
 		post.setTags(postTags);
 		postsRepository.save(post);
 	}
+
+
+	public Set<Post> filterByAuthorAndTags(String[] authorsName,String[] tagsId) {
+		
+		Set<Post> posts = new HashSet<>();
+
+		List<User> users = userRepository.findAll();
+		List<Tag> tags = tagRepository.findAll();
+		if(tagsId==null) {
+			for(String authorName:authorsName) {
+				for(User user : users) {
+					if(user.getName().equals(authorName)) {
+						posts.addAll(user.getPosts());
+					}
+				}
+			}
+		}
+		else if(authorsName==null) {
+			for(String tagId:tagsId) {
+				Tag tag = tagRepository.findById(Integer.parseInt(tagId)).get();
+				if(tags.contains(tag)) {
+					posts.addAll(tag.getPosts());
+				}
+			}
+		}
+		else {
+			for(String authorName:authorsName) {
+				for(User user : users) {
+					if(user.getName().equals(authorName)) {
+						List<Post> authorpost = user.getPosts();
+						for(Post post:authorpost) {
+							List<Tag> postTags = post.getTags();
+							for(String tagId:tagsId) {
+								Tag tag = tagRepository.findById(Integer.parseInt(tagId)).get();
+								if(tags.contains(tag) && postTags.contains(tag)) {
+									posts.add(post);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return posts;
+	}
+
+
+
+
+
+
 
 }

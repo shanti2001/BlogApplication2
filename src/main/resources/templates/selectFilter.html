@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Filter Page</title>
+<link rel="stylesheet" th:href="@{/style/homeStyle.css}" />
+</head>
+<body>
+	<div class="menu-bar">
+		<a href="/">Home</a>
+		<div class="menu-bar-right">
+			<a href="/login">Login</a>
+			<form th:action="@{/search}" method="get">
+				<input type="text" name="q" placeholder="Search blog posts" />
+				<!-- <button type="submit">Search</button> -->
+			</form>
+			<form th:action="@{/sortby}" method="get">
+				<select id="sort" name="sort" class="sortButton">
+					<option value="asc">Oldest</option>
+					<option value="desc">Newest</option>
+
+				</select> <input type="submit" value="SortByPublishDate">
+			</form>
+			<a th:href="@{/filter}">Filter</a> <a th:href="@{/newpost}">Create
+				New Blog</a>
+		</div>
+	</div>
+	<div>
+		<form th:action="@{/filterby}" method="post">
+			<div class="filterContainer">
+				<div class="item">
+					<p>Author</p>
+					<div th:each="user : ${users}" >
+						<input type="checkbox" name="authorName" th:value="${user.name}">
+						<span th:text="${user.name}"> </span>
+					</div>
+				</div>
+				<div class="item">
+					<p>Tags</p>
+					<div th:each="tag : ${tags}" >
+					
+						<input type="checkbox" name="tagId" th:value="${tag.id}">
+						<span th:text="${tag.name}"> </span>
+					</div>
+				</div>
+			</div>
+			<div align="center">
+				<input type="submit" value="Filter">
+			</div>
+		</form>
+
+	</div>
+</body>
+</html>

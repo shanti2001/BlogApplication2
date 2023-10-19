@@ -8,12 +8,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.blogApplication.BlogApplication2.entity.Post;
 import com.blogApplication.BlogApplication2.repository.PostRepository;
 import com.blogApplication.BlogApplication2.service.PostService;
+import com.blogApplication.BlogApplication2.service.UserService;
 
 @Controller
 public class UserController {
@@ -22,6 +24,9 @@ public class UserController {
 	PostRepository postsRepository;
 	@Autowired
 	PostService postService;
+	@Autowired
+	UserService userService;
+	
 //		@RequestMapping("/userpage")
 //		public String userPage(@RequestParam String email, String password,  Model model) {
 //			User user = userService.findByEmail(email);
@@ -33,6 +38,29 @@ public class UserController {
 //			model.addAttribute("posts",list);
 //			return "userPage";
 //		}
+	@RequestMapping(value = "/login")
+	public String login() {
+		return "login";
+	}
+	@RequestMapping(value = "/register")
+	public String register() {
+		return "register";
+	}
+	@PostMapping("/register")
+	public String addUser(@RequestParam(name = "name") String name,
+			@RequestParam(name = "email") String email,
+			@RequestParam(name = "password") String password,
+			@RequestParam(name = "confirmPassword") String confirmPassword) {
+		
+		if(password.equals(confirmPassword)) {
+			userService.addUser(name, email, password, password);
+			return "redirect:/login";
+		}
+		else {
+			return "register";
+		}
+		
+	}
 	
 	@RequestMapping("/userpage")
 	public String userPage(@RequestParam(name = "start", required = false, defaultValue = "1") int start,
