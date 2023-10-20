@@ -2,6 +2,7 @@ package com.blogApplication.BlogApplication2.controller;
 
 
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,8 @@ import com.blogApplication.BlogApplication2.service.UserService;
 
 @Controller
 public class HomeContrller {
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Autowired
 	UserRepository userRepository;
 	@Autowired
@@ -55,7 +59,7 @@ public class HomeContrller {
 		return "home";
 	}
 	
-	@RequestMapping(value = "/signin")
+	@RequestMapping(value = "/login")
 	public String login() {
 		return "login";
 	}
@@ -70,6 +74,7 @@ public class HomeContrller {
 			@RequestParam(name = "confirmPassword") String confirmPassword) {
 		
 		if(password.equals(confirmPassword)) {
+			password = bCryptPasswordEncoder.encode(password);
 			userService.addUser(name, email, password, password);
 			return "redirect:/login";
 		}
@@ -121,18 +126,26 @@ public class HomeContrller {
 	@RequestMapping("/filter")
 	public String filter(Model model) {
 		List<User> users = userRepository.findAll();
+		List<Date> publishDate = postsRepository.findPublishDate();
 		List<Tag> tags = tagRepository.findAll();
 		model.addAttribute("users",users);
+		model.addAttribute("publishDate",publishDate);
 		model.addAttribute("tags",tags);
 		return "selectFilter";
 	}
 	@RequestMapping("/filterby")
 	public String filterBy(@RequestParam(name = "authorName", required = false) String[] authorsName,
+			@RequestParam(name = "publishDate", required = false) String[] publishDates ,
 			@RequestParam(name = "tagId", required = false) String[] tagsId ,Model model) {
+		if(authorsName ==null && publishDates== null && tagsId==null) {
+			List<Post> posts = postsRepository.findAll();
+			model.addAttribute("posts",posts);
+		}
+		else {
+			Set<Post> posts = postService.filterByAuthorAndTags(authorsName,publishDates,tagsId);
+			model.addAttribute("posts",posts);
+		}
 		
-		Set<Post> posts = postService.filterByAuthorAndTags(authorsName,tagsId);
-
-		model.addAttribute("posts",posts);
 		return "home";
 	}
 }

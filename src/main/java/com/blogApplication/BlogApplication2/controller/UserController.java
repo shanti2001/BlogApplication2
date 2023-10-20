@@ -18,6 +18,7 @@ import com.blogApplication.BlogApplication2.service.PostService;
 import com.blogApplication.BlogApplication2.service.UserService;
 
 @Controller
+@RequestMapping("/user")
 public class UserController {
 
 	@Autowired

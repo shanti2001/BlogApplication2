@@ -32,23 +32,12 @@ public class PostService {
 		for(String searchOne:searchAll) {
 			results.addAll(postsRepository.findByTitleContaining(searchOne));
 			results.addAll(postsRepository.findByContentContaining(searchOne));
-//			for(User user:users) {
-//				if(user.getName().equals(searchOne)) {
-//					results.addAll(user.getPosts());
-//				}
-//			}
 			if(userRepository.findByAuthorName(searchOne)!=null) {
 				results.addAll(userRepository.findByAuthorName(searchOne));
 			}
 			if(tagRepository.findByTagName(searchOne)!=null) {
 				results.addAll(tagRepository.findByTagName(searchOne));
 			}
-			
-//			for(Tag tag:tags) {
-//				if(tag.getName().equals(searchOne)) {
-//					results.addAll(tag.getPosts());
-//				}
-//			}
 		}
 		return results;
 	}
@@ -99,23 +88,25 @@ public class PostService {
 				for(String tagName:tagsName) {
 					Tag newTag = new Tag();
 					newTag.setCreated_At(new Date());
-					newTag.setName(tagName.trim());
+					newTag.setName(tagName);
 					newTag.setUpdated_at(new Date());
 					tagRepository.save(newTag);
-					Tag tag = tagService.findByName(tagName.trim());
+					Tag tag = tagService.findByName(tagName);
 					List<Post> tagposts = tag.getPosts();
 					if(tagposts==null) {
 						tagposts = new ArrayList<>();
 					}
 					tagposts.add(post);
-					postTags.add(tag);
+					if(!postTags.contains(tag)) {
+						postTags.add(tag);
+					}
 					tagRepository.save(tag);
 				}
 			}
 			else {
 				for(String tagName:tagsName) {
 					for(Tag tag:tags) {
-						if(tag.getName().equals(tagName.trim())) {
+						if(tag.getName().equals(tagName)) {
 							Tag myTag = tagRepository.findById(tag.getId()).get();
 							myTag.setUpdated_at(new Date());
 							tagRepository.save(myTag);
@@ -125,24 +116,28 @@ public class PostService {
 								tagposts = new ArrayList<>();
 							}
 							tagposts.add(post);
-							postTags.add(tagn);
+							if(!postTags.contains(tag)) {
+								postTags.add(tag);
+							}
 							tagRepository.save(tagn);
 						}
 
 					}
-					if(tagService.findByName(tagName.trim())==null) {
+					if(tagService.findByName(tagName)==null) {
 						Tag newTag = new Tag();
 						newTag.setCreated_At(new Date());
-						newTag.setName(tagName.trim());
+						newTag.setName(tagName);
 						newTag.setUpdated_at(new Date());
 						tagRepository.save(newTag);
-						Tag tagn = tagService.findByName(tagName.trim());
+						Tag tagn = tagService.findByName(tagName);
 						List<Post> tagposts = tagn.getPosts();
 						if(tagposts==null) {
 							tagposts = new ArrayList<>();
 						}
 						tagposts.add(post);
-						postTags.add(tagn);
+						if(!postTags.contains(tagn)) {
+							postTags.add(tagn);
+						}
 						tagRepository.save(tagn);
 					}
 				}
@@ -194,10 +189,10 @@ public class PostService {
 			for(String tagName:tagsName) {
 				Tag newTag = new Tag();
 				newTag.setCreated_At(new Date());
-				newTag.setName(tagName.trim());
+				newTag.setName(tagName);
 				newTag.setUpdated_at(new Date());
 				tagRepository.save(newTag);
-				Tag tag = tagService.findByName(tagName.trim());
+				Tag tag = tagService.findByName(tagName);
 				List<Post> tagposts = tag.getPosts();
 				if(tagposts==null) {
 					tagposts = new ArrayList<>();
@@ -211,7 +206,7 @@ public class PostService {
 
 			for(String tagName:tagsName) {
 				for(Tag tag:tags) {
-					if(tag.getName().equals(tagName.trim())) {
+					if(tag.getName().equals(tagName)) {
 						Tag myTag = tagRepository.findById(tag.getId()).get();
 						myTag.setUpdated_at(new Date());
 						tagRepository.save(myTag);
@@ -226,13 +221,13 @@ public class PostService {
 					}
 
 				}
-				if(tagService.findByName(tagName.trim())==null) {
+				if(tagService.findByName(tagName)==null) {
 					Tag newTag = new Tag();
 					newTag.setCreated_At(new Date());
-					newTag.setName(tagName.trim());
+					newTag.setName(tagName);
 					newTag.setUpdated_at(new Date());
 					tagRepository.save(newTag);
-					Tag tagn = tagService.findByName(tagName.trim());
+					Tag tagn = tagService.findByName(tagName);
 					List<Post> tagposts = tagn.getPosts();
 					if(tagposts==null) {
 						tagposts = new ArrayList<>();
@@ -248,7 +243,7 @@ public class PostService {
 	}
 
 
-	public Set<Post> filterByAuthorAndTags(String[] authorsName,String[] tagsId) {
+	public Set<Post> filterByAuthorAndTags(String[] authorsName,String[] publishDates,String[] tagsId) {
 		
 		Set<Post> posts = new HashSet<>();
 
