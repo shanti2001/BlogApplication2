@@ -32,16 +32,23 @@ public class PostService {
 		for(String searchOne:searchAll) {
 			results.addAll(postsRepository.findByTitleContaining(searchOne));
 			results.addAll(postsRepository.findByContentContaining(searchOne));
-			for(User user:users) {
-				if(user.getName().equals(searchOne)) {
-					results.addAll(user.getPosts());
-				}
+//			for(User user:users) {
+//				if(user.getName().equals(searchOne)) {
+//					results.addAll(user.getPosts());
+//				}
+//			}
+			if(userRepository.findByAuthorName(searchOne)!=null) {
+				results.addAll(userRepository.findByAuthorName(searchOne));
 			}
-			for(Tag tag:tags) {
-				if(tag.getName().equals(searchOne)) {
-					results.addAll(tag.getPosts());
-				}
+			if(tagRepository.findByTagName(searchOne)!=null) {
+				results.addAll(tagRepository.findByTagName(searchOne));
 			}
+			
+//			for(Tag tag:tags) {
+//				if(tag.getName().equals(searchOne)) {
+//					results.addAll(tag.getPosts());
+//				}
+//			}
 		}
 		return results;
 	}

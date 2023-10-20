@@ -55,6 +55,30 @@ public class HomeContrller {
 		return "home";
 	}
 	
+	@RequestMapping(value = "/signin")
+	public String login() {
+		return "login";
+	}
+	@RequestMapping(value = "/register")
+	public String register() {
+		return "register";
+	}
+	@PostMapping("/register")
+	public String addUser(@RequestParam(name = "name") String name,
+			@RequestParam(name = "email") String email,
+			@RequestParam(name = "password") String password,
+			@RequestParam(name = "confirmPassword") String confirmPassword) {
+		
+		if(password.equals(confirmPassword)) {
+			userService.addUser(name, email, password, password);
+			return "redirect:/login";
+		}
+		else {
+			return "register";
+		}
+		
+	}
+	
 	@RequestMapping("/newpost")
 	public String newPost() {
 		return "newPost";

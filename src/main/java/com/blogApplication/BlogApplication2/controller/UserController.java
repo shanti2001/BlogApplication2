@@ -38,29 +38,7 @@ public class UserController {
 //			model.addAttribute("posts",list);
 //			return "userPage";
 //		}
-	@RequestMapping(value = "/login")
-	public String login() {
-		return "login";
-	}
-	@RequestMapping(value = "/register")
-	public String register() {
-		return "register";
-	}
-	@PostMapping("/register")
-	public String addUser(@RequestParam(name = "name") String name,
-			@RequestParam(name = "email") String email,
-			@RequestParam(name = "password") String password,
-			@RequestParam(name = "confirmPassword") String confirmPassword) {
-		
-		if(password.equals(confirmPassword)) {
-			userService.addUser(name, email, password, password);
-			return "redirect:/login";
-		}
-		else {
-			return "register";
-		}
-		
-	}
+	
 	
 	@RequestMapping("/userpage")
 	public String userPage(@RequestParam(name = "start", required = false, defaultValue = "1") int start,
