@@ -43,7 +43,7 @@ public class PostController {
 	@PostMapping("/publishpost")
 	public String addPost(@RequestParam("tagInput") String allTag, @ModelAttribute Post post) {
 		postService.addPost(allTag, post);
-		return "redirect:/userpage";
+		return "redirect:/";
 	}
 	@GetMapping("/update/{id}")
 	public String updatePostForm(@PathVariable int id, Model model) {

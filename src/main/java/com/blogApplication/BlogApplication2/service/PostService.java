@@ -4,6 +4,8 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.blogApplication.BlogApplication2.entity.Post;
@@ -159,8 +161,12 @@ public class PostService {
 			post.setPublished_at(new Date());
 		}
 		List<User> allUser = userRepository.findAll();
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User author = userRepository.getUserByUserName(username);
 
-		User author = allUser.get(0);
+//		User author = allUser.get(0);
 		//		User author = new User();
 		//		author.setEmail("shanti2001samanta@gmail.com");
 		//		author.setPassword("1234");
@@ -286,6 +292,8 @@ public class PostService {
 		}
 		return posts;
 	}
+	
+	
 
 
 

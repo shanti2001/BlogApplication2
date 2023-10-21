@@ -1,5 +1,7 @@
 package com.blogApplication.BlogApplication2.service;
 
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +23,15 @@ public class UserService {
 		newUser.setEmail(email);
 		newUser.setPassword(password);
 		userRepository.save(newUser);
+	}
+	public List<String> uniqueAuthorName(){
+		List<User> allUser = userRepository.findAll();
+		List<String> uniqueUsers = new ArrayList<>();
+		for(User user:allUser) {
+			if(!uniqueUsers.contains(user.getName())) {
+				uniqueUsers.add(user.getName());
+			}
+		}
+		return uniqueUsers;
 	}
 }

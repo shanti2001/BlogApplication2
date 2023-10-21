@@ -10,8 +10,11 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +33,8 @@ import com.blogApplication.BlogApplication2.repository.TagRepository;
 import com.blogApplication.BlogApplication2.repository.UserRepository;
 import com.blogApplication.BlogApplication2.service.PostService;
 import com.blogApplication.BlogApplication2.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class HomeContrller {
@@ -91,29 +96,39 @@ public class HomeContrller {
 
 	@GetMapping("/blogpost/{id}")
 	public String showAllOfOnePost(@PathVariable int id, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User author = userRepository.getUserByUserName(username);
+        
 		Post post = postsRepository.findById(id).orElse(null);
 		if(post==null) {
 			return "redirect:/";
 		}
 		model.addAttribute("post",post);
+		model.addAttribute("user",author);
 		return "blogPost";
 	}
 
-	@GetMapping("/search")
+	@RequestMapping("/search")
 	public String searchBlogPosts(@RequestParam(name = "q", required = false) String query,
 			@RequestParam(name = "start", required = false, defaultValue = "1") int start,
 			@RequestParam(name = "limit", required = false, defaultValue = "4") int limit , Model model) {
 		
 		
 		Set<Post> searchResults =	postService.findPostsByTitleOrContentOrAuthorOrTag(query);
-//		List<Post> pageResults = new ArrayList<>(searchResults).subList((start-1)*limit, Math.min((start-1)*limit+limit, searchResults.size()));
+		List<Post> postslist = new ArrayList<>(searchResults);
+		int fromIndex = Math.min((start-1) * limit, searchResults.size());
+		int toIndex = Math.min(fromIndex + limit, searchResults.size());
+		List<Post> content = postslist.subList(fromIndex, toIndex);
+		Page<Post> pageOfPosts = new PageImpl<>(content, PageRequest.of(start-1, limit), searchResults.size());
 		
 		model.addAttribute("pageCount",postService.getPageCount(limit));
+		model.addAttribute("search",query);
 		model.addAttribute("start",start);
 		model.addAttribute("limit",limit);
-		model.addAttribute("posts",searchResults);
+//		model.addAttribute("posts",postslist);
 		
-		model.addAttribute("searchBlogs", searchResults);
+		model.addAttribute("searchBlogs", pageOfPosts);
 		return "searchBlog";
 	}
 
@@ -125,7 +140,8 @@ public class HomeContrller {
 	}
 	@RequestMapping("/filter")
 	public String filter(Model model) {
-		List<User> users = userRepository.findAll();
+		List<String> users = userService.uniqueAuthorName();
+		
 		List<Date> publishDate = postsRepository.findPublishDate();
 		List<Tag> tags = tagRepository.findAll();
 		model.addAttribute("users",users);

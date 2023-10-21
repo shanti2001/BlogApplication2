@@ -1,5 +1,6 @@
 package com.blogApplication.BlogApplication2.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +20,17 @@ public class User {
 	
 	@OneToMany(mappedBy = "author")
     private List<Post> posts;
+	
+	@Column(name="roles")
+    private String roles = "ROLE_AUTHOR";
+	
 
+	public String getRoles() {
+		return roles;
+	}
+	public void setRoles(String roles) {
+		this.roles = roles;
+	}
 	public int getId() {
 		return id;
 	}

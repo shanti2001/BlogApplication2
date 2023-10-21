@@ -32,6 +32,9 @@ body {
 </head>
 <body>
 	<h1 th:text=${title}></h1>
+	<div th:if="${#lists.size(comments) == 0}">
+		<h3>There is no comment</h3>
+	</div>
 	<ul class="comment-list">
 		<li th:each="comment : ${comments}" class="comment">
 			<p class="user" th:text="${comment.name}"></p>

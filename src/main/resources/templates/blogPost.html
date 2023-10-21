@@ -29,15 +29,29 @@
 			</span>
 			</span> <span th:if="${post.tags.size() == 0}"></span>
 		</p>
-		<div class="comment-form">
-			<h3>Add a Comment</h3>
-			<form th:action="@{/comment}" method="post">
-				<input type="hidden" name="id" th:value="${post.id}" />
-				<label for="name">Name:</label> <input type="text" id="name" name="name" required><br>
-				<label for="email">Email:</label> <input type="text" id="email" name="email" required><br>
-				<label for="comment">Comment:</label><textarea id="comment" name="comment" rows="3" required></textarea><br>
-				<input type="submit" value="Respond">
-			</form>
+		<div th:if="${user==null}">
+			<div class="comment-form">
+				<h3>Add a Comment</h3>
+				<form th:action="@{/comment}" method="post">
+					<input type="hidden" name="id" th:value="${post.id}" />
+					<label for="name">Name:</label> <input type="text" id="name" name="name" required><br>
+					<label for="email">Email:</label> <input type="text" id="email" name="email"  required><br>
+					<label for="comment">Comment:</label><textarea id="comment" name="comment" rows="3" required></textarea><br>
+					<input type="submit" value="Respond">
+				</form>
+			</div>
+		</div>
+		<div th:if="${user!=null}">
+			<div class="comment-form">
+				<h3>Add a Comment</h3>
+				<form th:action="@{/comment}" method="post">
+					<input type="hidden" name="id" th:value="${post.id}" />
+					<label for="name">Name:</label> <input type="text" id="name" name="name" th:value="${user.name}" required><br>
+					<label for="email">Email:</label> <input type="text" id="email" name="email" th:value="${user.email}" required><br>
+					<label for="comment">Comment:</label><textarea id="comment" name="comment" rows="3" required></textarea><br>
+					<input type="submit" value="Respond">
+				</form>
+			</div>
 		</div>
 		<a th:href="@{'/showcomment/' + ${post.id}}">Show Comment</a>
 	</div>

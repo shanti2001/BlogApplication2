@@ -61,8 +61,8 @@
 	</div>
 	<div>
 		<nav th:if="${pageCount} != null">
-			<a class="prev" th:href="@{~/userblog(start=${start}-1,limit=${limit})}" th:unless="${start == 1}"> < Previous</a>
-			<a class="next" th:href="@{~/userblog(start=${start}+1,limit=${limit})}" th:unless="${start == pageCount}">Next > </a>
+			<a class="prev" th:href="@{~/user/userblog(start=${start}-1,limit=${limit})}" th:unless="${start == 1}"> < Previous</a>
+			<a class="next" th:href="@{~/user/userblog(start=${start}+1,limit=${limit})}" th:unless="${start == pageCount}">Next > </a>
 		</nav>
 	</div>
 </body>

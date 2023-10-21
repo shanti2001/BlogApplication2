@@ -57,11 +57,11 @@
 			</div>
 		</div>
 	</div>
-	<!-- <div>
+	<div>
 		<nav th:if="${pageCount} != null">
-			<a class="prev" th:href="@{~/(start=${start}-1,limit=${limit})}" th:unless="${start == 1}"> < Previous</a>
-			<a class="next" th:href="@{~/(start=${start}+1,limit=${limit})}" th:unless="${start == pageCount}">Next > </a>
+			<a class="prev" th:href="@{~/search(start=${start}-1,limit=${limit},q=${search})}" th:unless="${start == 1}"> < Previous</a>
+			<a class="next" th:href="@{~/search(start=${start}+1,limit=${limit},q=${search})}" th:unless="${start == pageCount}">Next > </a>
 		</nav>
-	</div> -->
+	</div>
 </body>
 </html>

@@ -22,7 +22,7 @@
 			</form>
 			<a th:href="@{/filter}">Filter</a>
 			<a th:href="@{/newpost}" >Create New Blog</a>
-			<a th:href="@{/userblog}">Your Post</a>
+			<a th:href="@{/user/userblog}">Your Post</a>
 		</div>
 	</div>
 
@@ -59,8 +59,8 @@
 	</div>
 	<div>
 		<nav th:if="${pageCount} != null">
-			<a class="prev" th:href="@{~/userpage(start=${start}-1,limit=${limit})}" th:unless="${start == 1}"> < Previous</a>
-			<a class="next" th:href="@{~/userpage(start=${start}+1,limit=${limit})}" th:unless="${start == pageCount}">Next > </a>
+			<a class="prev" th:href="@{~/user/userpage(start=${start}-1,limit=${limit})}" th:unless="${start == 1}"> < Previous</a>
+			<a class="next" th:href="@{~/user/userpage(start=${start}+1,limit=${limit})}" th:unless="${start == pageCount}">Next > </a>
 		</nav>
 	</div>
 </body>

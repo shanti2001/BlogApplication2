@@ -30,18 +30,18 @@
 				<div class="item">
 					<p>Author</p>
 					<div th:each="user : ${users}" >
-						<input type="checkbox" name="authorName" th:value="${user.name}">
-						<span th:text="${user.name}"> </span>
+						<input type="checkbox" name="authorName" th:value="${user}">
+						<span th:text="${user}"> </span>
 					</div>
 				</div>
-				<div class="item">
+				<!-- <div class="item">
 					<p>PublishDate</p>
 					<div th:each="date : ${publishDate}" >
 					
 						<input type="checkbox" name="publishDate" th:value="${date}">
 						<span th:text="${date}"> </span>
 					</div>
-				</div>
+				</div> -->
 				<div class="item">
 					<p>Tags</p>
 					<div th:each="tag : ${tags}" >

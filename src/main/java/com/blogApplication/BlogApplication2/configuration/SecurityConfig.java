@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebSecurity
+
 public class SecurityConfig {
 	
 	@Bean
@@ -28,14 +28,10 @@ public class SecurityConfig {
 	public DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
 		
-		daoAuthenticationProvider.setUserDetailsService(this.getUserDetailService());
-		daoAuthenticationProvider.setPasswordEncoder(this.passwordEncoder());
+		daoAuthenticationProvider.setUserDetailsService(getUserDetailService());
+		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
 		
 		return daoAuthenticationProvider;
-	}
-	
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-		auth.authenticationProvider(authenticationProvider());
 	}
 	
 	@Bean
@@ -44,9 +40,14 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorizeRequests ->
             authorizeRequests
                 .requestMatchers("/user/**").authenticated() 
+                .requestMatchers("/newpost").authenticated() 
                 .anyRequest().permitAll())
                 .formLogin(login ->login.loginPage("/login")
-                		);
+                		.loginProcessingUrl("/user/userpage")
+                		.defaultSuccessUrl("/user/userpage")
+                        .permitAll()
+                		)
+                .logout(logout -> logout.permitAll());
  
     return http.build();
 	}
