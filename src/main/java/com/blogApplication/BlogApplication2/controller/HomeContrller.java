@@ -4,7 +4,6 @@ package com.blogApplication.BlogApplication2.controller;
 
 import java.util.Date;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +31,6 @@ import com.blogApplication.BlogApplication2.repository.TagRepository;
 import com.blogApplication.BlogApplication2.repository.UserRepository;
 import com.blogApplication.BlogApplication2.service.PostService;
 import com.blogApplication.BlogApplication2.service.UserService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class HomeContrller {
