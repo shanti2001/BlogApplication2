@@ -11,13 +11,6 @@
 			<a href="/login">Login</a>
 			<form th:action="@{/search}" method="get">
 				<input type="text" name="q" placeholder="Search blog posts" />
-				<!-- <button type="submit">Search</button> -->
-			</form>
-			<!-- <form th:action="@{/sortby}" method="get">
-				<input type="text" name="q" placeholder="Type newest or oldest" />
-				<button type="submit">Sort blog posts using the published
-					DateTime</button>
-			</form> -->
 			<form th:action="@{/sortby}" method="get">
 			    <select id="sort" name="sort" class="sortButton">
 			        <option value="asc">Oldest</option>
@@ -63,10 +56,16 @@
 			</div>
 		</div>
 	</div>
-	<div>
+	<div th:if="${sort} == null">
 		<nav th:if="${pageCount} != null">
 			<a class="prev" th:href="@{~/(start=${start}-1,limit=${limit})}" th:unless="${start == 1}"> < Previous</a>
 			<a class="next" th:href="@{~/(start=${start}+1,limit=${limit})}" th:unless="${start == pageCount}">Next > </a>
+		</nav>
+	</div>
+	<div th:if="${sort} !=null">
+		<nav th:if="${pageCount} != null">
+			<a class="prev" th:href="@{~/(start=${start}-1,limit=${limit},sort=${sort})}" th:unless="${start == 1}"> < Previous</a>
+			<a class="next" th:href="@{~/(start=${start}+1,limit=${limit},sort=${sort})}" th:unless="${start == pageCount}">Next > </a>
 		</nav>
 	</div>
 </body>

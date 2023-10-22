@@ -36,13 +36,21 @@ body {
 		<h3>There is no comment</h3>
 	</div>
 	<ul class="comment-list">
+		
 		<li th:each="comment : ${comments}" class="comment">
 			<p class="user" th:text="${comment.name}"></p>
 			<p class="timestamp" th:text="${comment.updated_at}"></p>
 			<p th:text="${comment.comment}"></p> 
-			<a th:href="@{/updatecomment/{id}(id=${comment.id})}" >Update</a>
-			<a th:href="@{/deletecomment/{id}(id=${comment.id})}" >Delete</a>
+			<span th:if="${author!=null}">
+				<span th:if="${comment.email==author.email}">
+					<a th:href="@{/updatecomment/{id}(id=${comment.id})}" >Update</a>
+				</span>
+				<span th:if="${comment.email==author.email or comment.post.author==author}">
+					<a th:href="@{/deletecomment/{id}(id=${comment.id})}" >Delete</a>
+				</span>
+			</span>
 		</li>
+		
 	</ul>
 </body>
 </html>

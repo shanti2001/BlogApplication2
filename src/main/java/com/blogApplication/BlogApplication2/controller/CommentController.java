@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.blogApplication.BlogApplication2.entity.Comment;
 import com.blogApplication.BlogApplication2.entity.Post;
+import com.blogApplication.BlogApplication2.entity.User;
 import com.blogApplication.BlogApplication2.repository.CommentRepository;
 import com.blogApplication.BlogApplication2.repository.PostRepository;
+import com.blogApplication.BlogApplication2.repository.UserRepository;
 import com.blogApplication.BlogApplication2.service.CommentService;
 
 
@@ -29,6 +33,8 @@ public class CommentController {
 	PostRepository postRepository;
 	@Autowired
 	CommentService commentService;
+	@Autowired
+	UserRepository userRepository;
 
 	@PostMapping("/comment")
 	public String addComment(@RequestParam(name = "id") int id,
@@ -42,6 +48,10 @@ public class CommentController {
 	
 	@GetMapping("/showcomment/{id}")
 	public String readComment(@PathVariable int id, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User author = userRepository.getUserByUserName(username);
+        
 		Post post = postRepository.findById(id).orElse(null);
 		if(post==null) {
 			return "redirect:/";
@@ -49,6 +59,7 @@ public class CommentController {
 		
 		model.addAttribute("comments",post.getComments());
 		model.addAttribute("title",post.getTitle());
+		model.addAttribute("author",author);
 		return "Comment";
 	}
 	

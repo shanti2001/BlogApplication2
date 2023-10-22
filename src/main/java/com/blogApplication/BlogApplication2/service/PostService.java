@@ -166,12 +166,6 @@ public class PostService {
         String username = authentication.getName();
         User author = userRepository.getUserByUserName(username);
 
-//		User author = allUser.get(0);
-		//		User author = new User();
-		//		author.setEmail("shanti2001samanta@gmail.com");
-		//		author.setPassword("1234");
-		//		author.setName("shanti");
-
 		post.setAuthor(author);
 
 		post.setCreated_at(new Date());

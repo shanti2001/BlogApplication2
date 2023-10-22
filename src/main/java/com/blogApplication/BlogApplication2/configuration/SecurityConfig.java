@@ -43,8 +43,8 @@ public class SecurityConfig {
                 .requestMatchers("/newpost").authenticated() 
                 .anyRequest().permitAll())
                 .formLogin(login ->login.loginPage("/login")
-                		.loginProcessingUrl("/user/userpage")
-                		.defaultSuccessUrl("/user/userpage")
+                		.loginProcessingUrl("/authenticateTheUser")
+//                		.defaultSuccessUrl("/user/userpage")
                         .permitAll()
                 		)
                 .logout(logout -> logout.permitAll());

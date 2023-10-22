@@ -54,7 +54,6 @@ public class HomeContrller {
 	@RequestMapping("/")
 	public String home(@RequestParam(name = "start", required = false, defaultValue = "1") int start,
 			@RequestParam(name = "limit", required = false, defaultValue = "4") int limit ,Model model) {
-
 		Pageable pageable = PageRequest.of(start-1,limit);
 		Page<Post> posts = postsRepository.findAll(pageable);
 		model.addAttribute("pageCount",postService.getPageCount(limit));
@@ -133,9 +132,22 @@ public class HomeContrller {
 	}
 
 	@RequestMapping("/sortby")
-	public String getAllPostsSortedByPublishedDate(@RequestParam(name = "sort", required = false) String sortBy, Model model) {
+	public String getAllPostsSortedByPublishedDate(@RequestParam(name = "sort", required = false) String sortBy,
+			@RequestParam(name = "start", required = false, defaultValue = "1") int start,
+			@RequestParam(name = "limit", required = false, defaultValue = "4") int limit ,Model model) {
+		
 		List<Post> posts = postService.getAllPostsSortedByPublishDate(sortBy);
-		model.addAttribute("posts", posts);
+		
+		int fromIndex = Math.min((start-1) * limit, posts.size());
+		int toIndex = Math.min(fromIndex + limit, posts.size());
+		List<Post> content = posts.subList(fromIndex, toIndex);
+		Page<Post> pageOfPosts = new PageImpl<>(content, PageRequest.of(start-1, limit), posts.size());
+		
+		model.addAttribute("pageCount",postService.getPageCount(limit));
+		model.addAttribute("sort",sortBy);
+		model.addAttribute("start",start);
+		model.addAttribute("limit",limit);
+		model.addAttribute("posts", pageOfPosts);
 		return "home";
 	}
 	@RequestMapping("/filter")
