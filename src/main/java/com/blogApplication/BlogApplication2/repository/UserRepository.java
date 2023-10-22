@@ -14,6 +14,6 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	@Query("select u from User u where u.email = :email")
 	public User getUserByUserName(String email);
 	
-	@Query("select u.posts from User u where u.name = :name")
+	@Query("select u.posts from User u where lower(u.name) like concat('%',lower(:name),'%')")
 	public List<Post> findByAuthorName(String name);
 }
