@@ -8,6 +8,11 @@
 	<div class="menu-bar">
 		<a href="/">Home</a>
 		<div class="menu-bar-right">
+			<span th:if="${user} != null">
+				<form th:action="@{/logout}" method="POST">
+		            <button ><input type="submit" value="Logout"></button>
+		        </form>
+			</span>
 			<form th:action="@{/search}" method="get">
 				<input type="text" name="q" placeholder="Search blog posts" />
 				<!-- <button type="submit">Search</button> -->
@@ -60,7 +65,7 @@
 	<div>
 		<nav th:if="${pageCount} != null">
 			<a class="prev" th:href="@{~/user/userpage(start=${start}-1,limit=${limit})}" th:unless="${start == 1}"> < Previous</a>
-			<a class="next" th:href="@{~/user/userpage(start=${start}+1,limit=${limit})}" th:unless="${start+1 == pageCount}">Next > </a>
+			<a class="next" th:href="@{~/user/userpage(start=${start}+1,limit=${limit})}" th:unless="${start == pageCount}">Next > </a>
 		</nav>
 	</div>
 </body>

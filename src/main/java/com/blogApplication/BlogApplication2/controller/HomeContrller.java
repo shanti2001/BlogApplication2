@@ -50,16 +50,27 @@ public class HomeContrller {
 	UserService userService;
 	@Autowired
 	TagRepository tagRepository;
+	
+	public User getUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User author = userRepository.getUserByUserName(username);
+        return author;
+	}
 
 	@RequestMapping("/")
 	public String home(@RequestParam(name = "start", required = false, defaultValue = "1") int start,
-			@RequestParam(name = "limit", required = false, defaultValue = "4") int limit ,Model model) {
+			@RequestParam(name = "limit", required = false, defaultValue = "8") int limit ,Model model) {
+		
+        User author = getUser();
+		
 		Pageable pageable = PageRequest.of(start-1,limit);
 		Page<Post> posts = postsRepository.findAll(pageable);
 		model.addAttribute("pageCount",postService.getPageCount(limit));
 		model.addAttribute("start",start);
 		model.addAttribute("limit",limit);
 		model.addAttribute("posts",posts);
+		model.addAttribute("user",author);
 		return "home";
 	}
 	
@@ -75,14 +86,15 @@ public class HomeContrller {
 	public String addUser(@RequestParam(name = "name") String name,
 			@RequestParam(name = "email") String email,
 			@RequestParam(name = "password") String password,
-			@RequestParam(name = "confirmPassword") String confirmPassword) {
+			@RequestParam(name = "confirmPassword") String confirmPassword,Model model) {
 		
-		if(password.equals(confirmPassword)) {
+		if(password.equals(confirmPassword) && userRepository.getUserByUserName(email)==null) {
 			password = bCryptPasswordEncoder.encode(password);
 			userService.addUser(name, email, password, password);
 			return "redirect:/login";
 		}
 		else {
+			model.addAttribute("error","Sorry! Email already in use");
 			return "register";
 		}
 		
@@ -95,10 +107,8 @@ public class HomeContrller {
 
 	@GetMapping("/blogpost/{id}")
 	public String showAllOfOnePost(@PathVariable int id, Model model) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User author = userRepository.getUserByUserName(username);
-        
+		
+		User author = getUser();
 		Post post = postsRepository.findById(id).orElse(null);
 		if(post==null) {
 			return "redirect:/";
@@ -111,9 +121,9 @@ public class HomeContrller {
 	@RequestMapping("/search")
 	public String searchBlogPosts(@RequestParam(name = "q", required = false) String query,
 			@RequestParam(name = "start", required = false, defaultValue = "1") int start,
-			@RequestParam(name = "limit", required = false, defaultValue = "4") int limit , Model model) {
+			@RequestParam(name = "limit", required = false, defaultValue = "8") int limit , Model model) {
 		
-		
+		User author = getUser();
 		Set<Post> searchResults =	postService.findPostsByTitleOrContentOrAuthorOrTag(query);
 		List<Post> postslist = new ArrayList<>(searchResults);
 		int fromIndex = Math.min((start-1) * limit, searchResults.size());
@@ -125,7 +135,7 @@ public class HomeContrller {
 		model.addAttribute("search",query);
 		model.addAttribute("start",start);
 		model.addAttribute("limit",limit);
-//		model.addAttribute("posts",postslist);
+		model.addAttribute("user",author);
 		
 		model.addAttribute("searchBlogs", pageOfPosts);
 		return "searchBlog";
@@ -134,9 +144,10 @@ public class HomeContrller {
 	@RequestMapping("/sortby")
 	public String getAllPostsSortedByPublishedDate(@RequestParam(name = "sort", required = false) String sortBy,
 			@RequestParam(name = "start", required = false, defaultValue = "1") int start,
-			@RequestParam(name = "limit", required = false, defaultValue = "4") int limit ,Model model) {
+			@RequestParam(name = "limit", required = false, defaultValue = "8") int limit ,Model model) {
 		
 		List<Post> posts = postService.getAllPostsSortedByPublishDate(sortBy);
+		User author = getUser();
 		
 		int fromIndex = Math.min((start-1) * limit, posts.size());
 		int toIndex = Math.min(fromIndex + limit, posts.size());
@@ -148,23 +159,26 @@ public class HomeContrller {
 		model.addAttribute("start",start);
 		model.addAttribute("limit",limit);
 		model.addAttribute("posts", pageOfPosts);
+		model.addAttribute("user",author);
 		return "home";
 	}
 	@RequestMapping("/filter")
 	public String filter(Model model) {
 		List<String> users = userService.uniqueAuthorName();
-		
+		User author = getUser();
 		List<Date> publishDate = postsRepository.findPublishDate();
 		List<Tag> tags = tagRepository.findAll();
 		model.addAttribute("users",users);
 		model.addAttribute("publishDate",publishDate);
 		model.addAttribute("tags",tags);
+		model.addAttribute("user",author);
 		return "selectFilter";
 	}
 	@RequestMapping("/filterby")
 	public String filterBy(@RequestParam(name = "authorName", required = false) String[] authorsName,
 			@RequestParam(name = "publishDate", required = false) String[] publishDates ,
 			@RequestParam(name = "tagId", required = false) String[] tagsId ,Model model) {
+		User author = getUser();
 		if(authorsName ==null && publishDates== null && tagsId==null) {
 			List<Post> posts = postsRepository.findAll();
 			model.addAttribute("posts",posts);
@@ -173,7 +187,9 @@ public class HomeContrller {
 			Set<Post> posts = postService.filterByAuthorAndTags(authorsName,publishDates,tagsId);
 			model.addAttribute("posts",posts);
 		}
+		model.addAttribute("user",author);
 		
 		return "home";
 	}
+	
 }

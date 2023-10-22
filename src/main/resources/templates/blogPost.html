@@ -7,8 +7,15 @@
 <body>
 	<div class="menu-bar">
 		<a href="/">Home</a>
-		<div class="menu-bar-right" th:if="${user==null}">
-			<a href="/login">Login</a>
+		<div class="menu-bar-right">
+			<span th:if="${user} == null">
+				<a th:href="@{/login}">Login</a>
+			</span>
+			<span th:if="${user} != null">
+				<form th:action="@{/logout}" method="POST">
+		            <button ><input type="submit" value="Logout"></button>
+		        </form>
+			</span>
 		</div>
 	</div>
 

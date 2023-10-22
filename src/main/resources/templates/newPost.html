@@ -9,10 +9,15 @@
 <body>
 	<div class="menu-bar">
 		<a href="/">Home</a>
-		<div class="menu-bar-right">
+		<span th:if="${user} != null">
+			<form th:action="@{/logout}" method="POST">
+		         <button ><input type="submit" value="Logout"></button>
+		    </form>
+		</span>
+		<!-- <div class="menu-bar-right">
 			<form th:action="@{/search}" method="get">
 				<input type="text" name="q" placeholder="Search blog posts" />
-				<!-- <button type="submit">Search</button> -->
+				<button type="submit">Search</button>
 			</form>
 			<form th:action="@{/sortby}" method="get">
 			    <select id="sort" name="sort" class="sortButton">
@@ -23,9 +28,9 @@
 			    <input type="submit" value="SortByPublishDate"> 
 			</form>
 			<a th:href="@{/filter}">Filter</a>
-			<!-- <a href="/newpost" class="green-button">Create New Blog</a>
- -->
-		</div>
+			<a href="/newpost" class="green-button">Create New Blog</a>
+
+		</div> -->
 	</div>
 	<div class="form-container">
 		<h2 align="center">Write New Post</h2>

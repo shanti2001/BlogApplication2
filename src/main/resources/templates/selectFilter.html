@@ -8,7 +8,14 @@
 	<div class="menu-bar">
 		<a href="/">Home</a>
 		<div class="menu-bar-right">
-			<a href="/login">Login</a>
+			<span th:if="${user} == null">
+				<a th:href="@{/login}">Login</a>
+			</span>
+			<span th:if="${user} != null">
+				<form th:action="@{/logout}" method="POST">
+		            <button ><input type="submit" value="Logout"></button>
+		        </form>
+			</span>
 			<form th:action="@{/search}" method="get">
 				<input type="text" name="q" placeholder="Search blog posts" />
 				<!-- <button type="submit">Search</button> -->
@@ -22,6 +29,9 @@
 			</form>
 			<a th:href="@{/filter}">Filter</a> <a th:href="@{/newpost}">Create
 				New Blog</a>
+			<span th:if="${user} != null">
+				<a th:href="@{/user/userblog}">Your Post</a>
+			</span>
 		</div>
 	</div>
 	<div>

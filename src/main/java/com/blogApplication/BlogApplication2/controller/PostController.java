@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.blogApplication.BlogApplication2.entity.Comment;
 import com.blogApplication.BlogApplication2.entity.Post;
 import com.blogApplication.BlogApplication2.entity.Tag;
 import com.blogApplication.BlogApplication2.entity.User;
+import com.blogApplication.BlogApplication2.repository.CommentRepository;
 import com.blogApplication.BlogApplication2.repository.PostRepository;
 import com.blogApplication.BlogApplication2.repository.TagRepository;
 import com.blogApplication.BlogApplication2.repository.UserRepository;
@@ -41,6 +43,8 @@ public class PostController {
 	UserService userService;
 	@Autowired
 	TagService tagService;
+	@Autowired
+	CommentRepository commentRepository;
 
 	@PostMapping("/publishpost")
 	public String addPost(@RequestParam("tagInput") String allTag, @ModelAttribute Post post) {
@@ -67,14 +71,20 @@ public class PostController {
 	}
 	@PostMapping("/update")
 	public String updateForm(@RequestParam("tagInput") String allTag, @ModelAttribute Post post) {
+		
 		postService.updatePost(allTag,post);
-		return "redirect:/userpage"; 
+		return "redirect:/"; 
 	}
 
 	@GetMapping("/delete/{id}")
 	public String deletePost(@PathVariable int id) {
+		Post post = postsRepository.findById(id).get();
+		List<Comment> comments = post.getComments();
+		for(Comment comment:comments) {
+			commentRepository.delete(comment);
+		}
 		postsRepository.deleteById(id);
-		return "redirect:/userblog";
+		return "redirect:/user/userblog";
 	}
 
 }

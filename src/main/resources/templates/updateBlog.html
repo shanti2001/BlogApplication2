@@ -62,20 +62,12 @@
 	<div class="menu-bar">
 		<a href="/">Home</a>
 		<div class="menu-bar-right">
-			<a href="/login">Login</a>
-			<form th:action="@{/search}" method="get">
-				<input type="text" name="q" placeholder="Search blog posts" />
-				<!-- <button type="submit">Search</button> -->
-			</form>
-			<form th:action="@{/sortby}" method="get">
-			    <select id="sort" name="sort" class="sortButton">
-			        <option value="asc">Oldest</option>
-			        <option value="desc">Newest</option>
-			        
-			    </select> 
-			    <input type="submit" value="SortByPublishDate"> 
-			</form>
-			<a th:href="@{/newpost}" >Create New Blog</a>
+			<span th:if="${user} != null">
+				<form th:action="@{/logout}" method="POST">
+		            <button ><input type="submit" value="Logout"></button>
+		        </form>
+			</span>
+			
 
 		</div>
 	</div>

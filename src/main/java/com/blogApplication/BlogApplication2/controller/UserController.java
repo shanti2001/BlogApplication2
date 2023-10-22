@@ -35,41 +35,30 @@ public class UserController {
 	@Autowired
 	UserRepository userRepository;
 	
-//		@RequestMapping("/userpage")
-//		public String userPage(@RequestParam String email, String password,  Model model) {
-//			User user = userService.findByEmail(email);
-//			if(user!=null && user.getPassword().equals(password)) {
-//				model.addAttribute("user",user);
-//			}
-//			
-//			List<Posts> list = postsRepository.findAll();
-//			model.addAttribute("posts",list);
-//			return "userPage";
-//		}
-	
 	
 	@RequestMapping("/userpage")
 	public String userPage(@RequestParam(name = "start", required = false, defaultValue = "1") int start,
-			@RequestParam(name = "limit", required = false, defaultValue = "4") int limit ,Model model) {
+			@RequestParam(name = "limit", required = false, defaultValue = "8") int limit ,Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User author = userRepository.getUserByUserName(username);
 		Pageable pageable = PageRequest.of(start-1,limit);
 		Page<Post> posts = postsRepository.findAll(pageable);
 		model.addAttribute("pageCount",postService.getPageCount(limit));
 		model.addAttribute("start",start);
 		model.addAttribute("limit",limit);
 		model.addAttribute("posts",posts);
+		model.addAttribute("user",author);
 		return "userPage";
 	}
 	@RequestMapping("/userblog")
 	public String userBlog(@RequestParam(name = "start", required = false, defaultValue = "1") int start,
-			@RequestParam(name = "limit", required = false, defaultValue = "4") int limit ,Model model) {
+			@RequestParam(name = "limit", required = false, defaultValue = "8") int limit ,Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User author = userRepository.getUserByUserName(username);
         
-//		Pageable pageable = PageRequest.of(start-1,limit);
-//		Page<Post> posts = postsRepository.findAll(pageable);
-        List<Post> userPosts = author.getPosts();
-        
+        List<Post> userPosts = author.getPosts();     
         int fromIndex = Math.min((start-1) * limit, userPosts.size());
 		int toIndex = Math.min(fromIndex + limit, userPosts.size());
 		List<Post> content = userPosts.subList(fromIndex, toIndex);
@@ -79,6 +68,7 @@ public class UserController {
 		model.addAttribute("start",start);
 		model.addAttribute("limit",limit);
 		model.addAttribute("posts",pageOfPosts);
+		model.addAttribute("user",author);
 		return "userBlog";
 	}
 }
