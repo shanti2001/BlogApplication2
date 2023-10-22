@@ -12,7 +12,7 @@ public interface TagRepository extends JpaRepository<Tag, Integer>{
 	
 	public Tag findByName(String name);
 	
-	@Query("select t.posts from Tag t where t.name = :name")
+	@Query("select t.posts from Tag t where lower(t.name) like concat('%',lower(:name),'%')")
 	public List<Post> findByTagName(String name);
 
 }
