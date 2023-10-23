@@ -83,8 +83,8 @@
 	</div>
 	<div th:if="${sort} !=null">
 		<nav th:if="${pageCount} != null">
-			<a class="prev" th:href="@{~/(start=${start}-1,limit=${limit},sort=${sort})}" th:unless="${start == 1}"> < Previous</a>
-			<a class="next" th:href="@{~/(start=${start}+1,limit=${limit},sort=${sort})}" th:unless="${start == pageCount}">Next > </a>
+			<a class="prev" th:href="@{~/sortby(start=${start}-1,limit=${limit},sort=${sort})}" th:unless="${start == 1}"> < Previous</a>
+			<a class="next" th:href="@{~/sortby(start=${start}+1,limit=${limit},sort=${sort})}" th:unless="${start == pageCount}">Next > </a>
 		</nav>
 	</div>
 </body>
