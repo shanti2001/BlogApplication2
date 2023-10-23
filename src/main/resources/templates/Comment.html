@@ -73,7 +73,7 @@ body {
 			<p class="user" th:text="${comment.name}"></p>
 			<p class="timestamp" th:text="${comment.updated_at}"></p>
 			<p th:text="${comment.comment}"></p> 
-			<span th:if="${author!=null}">
+			<span th:if="${author!=null and author.roles=='ROLE_AUTHOR'}">
 				<span th:if="${comment.email==author.email}">
 					<a th:href="@{/updatecomment/{id}(id=${comment.id})}" >Update</a>
 				</span>
@@ -81,6 +81,10 @@ body {
 					<a th:href="@{/deletecomment/{id}(id=${comment.id})}" >Delete</a>
 				</span>
 			</span>
+			<span th:if="${author!=null and author.roles=='ROLE_ADMIN'}">
+				<a th:href="@{/updatecomment/{id}(id=${comment.id})}" >Update</a>
+				<a th:href="@{/deletecomment/{id}(id=${comment.id})}" >Delete</a>
+			</span>	
 		</li>
 		
 	</ul>
