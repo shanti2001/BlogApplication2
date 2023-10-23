@@ -57,7 +57,11 @@ public class UserController {
         String username = authentication.getName();
         User author = userRepository.getUserByUserName(username);
         
-        List<Post> userPosts = author.getPosts();     
+        List<Post> userPosts = author.getPosts();
+	if(author.getRoles().equals("ROLE_ADMIN")) {
+        	userPosts = postsRepository.findAll(); 
+        }
+
         int fromIndex = Math.min((start-1) * limit, userPosts.size());
 		int toIndex = Math.min(fromIndex + limit, userPosts.size());
 		List<Post> content = userPosts.subList(fromIndex, toIndex);
