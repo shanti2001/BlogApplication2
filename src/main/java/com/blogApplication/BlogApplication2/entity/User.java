@@ -22,7 +22,7 @@ public class User {
     private List<Post> posts;
 	
 	@Column(name="roles")
-    private String roles = "ROLE_ADMIN";
+    private String roles = "ROLE_AUTHOR";
 	
 
 	public String getRoles() {
