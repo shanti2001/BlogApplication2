@@ -31,7 +31,13 @@
 			<a th:href="@{/filter}">Filter</a>
 			<a th:href="@{/newpost}" >Create New Blog</a>
 			<span th:if="${user} != null">
-				<a th:href="@{/user/userblog}">Your Post</a>
+				<span th:if="${user.roles} == 'ROLE_AUTHOR'">
+					<a th:href="@{/user/userblog}">Your Post</a>
+				</span>
+				<span th:if="${user.roles} == 'ROLE_ADMIN'">
+					<a th:href="@{/user/userblog}">All Post</a>
+				</span>
+
 			</span>
 			
 		</div>
