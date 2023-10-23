@@ -41,7 +41,10 @@
 					<h2 th:text="${post.title}"></h2>
 					<div th:if="${post.author != null}">
 						<p>
-							<!-- <span th:text="${post.author.name}"></span> -->
+							<span th:if="${post.author} != ${user}">
+								<span th:text="${post.author.name}"></span>
+							</span>
+
 							<span th:text="${#dates.format(post.published_at, 'dd/MM/yyyy')}"></span>
 						</p>
 					</div>
