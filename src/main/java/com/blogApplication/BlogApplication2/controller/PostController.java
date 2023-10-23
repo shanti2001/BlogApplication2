@@ -52,14 +52,15 @@ public class PostController {
 		Post post = postsRepository.findById(id).orElse(null);
 		List<Tag> tags = post.getTags();
 		String allTags = "";
-		for(int i=0;i<tags.size();i++) {
-			if(i==tags.size()-1) {
-				allTags+=tags.get(i).getName();
+		for(int index=0;index<tags.size();index++) {
+			if(index==tags.size()-1) {
+				allTags+=tags.get(index).getName();
 			}
 			else {
-				allTags+=tags.get(i).getName()+",";
+				allTags+=tags.get(index).getName()+",";
 			}
 		}
+
 		model.addAttribute("post",post);
 		model.addAttribute("alltags",allTags);
 		return "updateBlog";
