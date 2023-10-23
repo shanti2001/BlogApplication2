@@ -36,6 +36,10 @@
 
 		</div>
 	</div>
+	<div>
+		<h3>WellCome <span th:text="${user.name}"></span></h3>
+	</div>
+
 
 	<div th:if="${#lists.size(posts) == 0}">
 		<h3>There is no blog</h3>
