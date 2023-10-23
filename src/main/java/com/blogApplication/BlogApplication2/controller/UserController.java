@@ -43,7 +43,7 @@ public class UserController {
         User author = userRepository.getUserByUserName(username);
 		Pageable pageable = PageRequest.of(start-1,limit);
 		Page<Post> posts = postsRepository.findAll(pageable);
-		model.addAttribute("pageCount",postService.getPageCount(limit));
+		model.addAttribute("pageCount",postService.getPageCount(limit,postsRepository.findAll().size()));
 		model.addAttribute("start",start);
 		model.addAttribute("limit",limit);
 		model.addAttribute("posts",posts);
@@ -63,7 +63,7 @@ public class UserController {
 		List<Post> content = userPosts.subList(fromIndex, toIndex);
 		Page<Post> pageOfPosts = new PageImpl<>(content, PageRequest.of(start-1, limit), userPosts.size());
 		
-		model.addAttribute("pageCount",postService.getPageCount(limit));
+		model.addAttribute("pageCount",postService.getPageCount(limit,userPosts.size()));
 		model.addAttribute("start",start);
 		model.addAttribute("limit",limit);
 		model.addAttribute("posts",pageOfPosts);
