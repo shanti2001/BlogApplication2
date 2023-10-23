@@ -76,9 +76,6 @@ public class PostService {
 		Post exitPost = postsRepository.findById(postId).orElse(null);
 		if(exitPost != null) {
 			String[] tagsName = allTag.split(",");
-			for(String s:tagsName) {
-				System.out.print(s+" ");
-			}
 			List<Tag> postTags = exitPost.getTags();
 			if(postTags.size()==0) {
 				postTags = new ArrayList();
