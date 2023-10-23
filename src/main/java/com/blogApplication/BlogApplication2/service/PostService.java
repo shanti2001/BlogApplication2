@@ -58,8 +58,7 @@ public class PostService {
 		return posts;
 	}
 
-	public Long getPageCount(int limit){
-		long postCount = postsRepository.count();
+	public Long getPageCount(int limit,int postCount){
 		if (postCount<=limit)
 			return null;
 		long pageCount=0;
