@@ -62,7 +62,7 @@ public class HomeContrller {
 		
 		Pageable pageable = PageRequest.of(start-1,limit);
 		Page<Post> posts = postsRepository.findAll(pageable);
-		model.addAttribute("pageCount",postService.getPageCount(limit));
+		model.addAttribute("pageCount",postService.getPageCount(limit,postsRepository.findAll().size()));
 		model.addAttribute("start",start);
 		model.addAttribute("limit",limit);
 		model.addAttribute("posts",posts);
@@ -127,7 +127,7 @@ public class HomeContrller {
 		List<Post> content = postslist.subList(fromIndex, toIndex);
 		Page<Post> pageOfPosts = new PageImpl<>(content, PageRequest.of(start-1, limit), searchResults.size());
 		
-		model.addAttribute("pageCount",postService.getPageCount(limit));
+		model.addAttribute("pageCount",postService.getPageCount(limit,postslist.size()));
 		model.addAttribute("search",query);
 		model.addAttribute("start",start);
 		model.addAttribute("limit",limit);
@@ -150,7 +150,7 @@ public class HomeContrller {
 		List<Post> content = posts.subList(fromIndex, toIndex);
 		Page<Post> pageOfPosts = new PageImpl<>(content, PageRequest.of(start-1, limit), posts.size());
 		
-		model.addAttribute("pageCount",postService.getPageCount(limit));
+		model.addAttribute("pageCount",postService.getPageCount(limit,posts.size()));
 		model.addAttribute("sort",sortBy);
 		model.addAttribute("start",start);
 		model.addAttribute("limit",limit);
