@@ -33,6 +33,10 @@
 
 		</div>
 	</div>
+	<div th:if="${user} != null">
+		<h3>WellCome <span th:text="${user.name}"></span></h3>
+	</div>
+
 	<div th:if="${#lists.size(searchBlogs) == 0}">
 		<h3>There is no blog</h3>
 	</div>
